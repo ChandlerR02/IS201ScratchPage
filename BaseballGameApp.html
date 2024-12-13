@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseball Game App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .game-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .bases {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .base {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+        }
+
+        .occupied {
+            background-color: #2ecc71;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Baseball Game</h1>
+    </header>
+
+    <main>
+        <div class="game-container">
+            <p class="score">Score: <span id="score">0</span></p>
+            <div class="bases">
+                <div id="firstBase" class="base">1</div>
+                <div id="secondBase" class="base">2</div>
+                <div id="thirdBase" class="base">3</div>
+            </div>
+            <button onclick="swingBat()">Swing the Bat!</button>
+            <p id="result"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Baseball Game App</p>
+    </footer>
+
+    <script>
+        let score = 0;
+        let bases = [false, false, false]; // [First, Second, Third]
+
+        function updateBasesDisplay() {
+            document.getElementById('firstBase').classList.toggle('occupied', bases[0]);
+            document.getElementById('secondBase').classList.toggle('occupied', bases[1]);
+            document.getElementById('thirdBase').classList.toggle('occupied', bases[2]);
+        }
+
+        function swingBat() {
+            const outcomes = ["Home Run!", "Strike!", "Double!", "Foul Ball!", "Single!", "Out!"];
+            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+            document.getElementById('result').textContent = randomOutcome;
+
+            if (randomOutcome === "Home Run!") {
+                score += 1 + bases.filter(Boolean).length;
+                bases = [false, false, false];
+            } else if (randomOutcome === "Double!") {
+                score += bases[2] ? 1 : 0;
+                bases = [false, bases[0], bases[1]];
+                bases[1] = true;
+            } else if (randomOutcome === "Single!") {
+                score += bases[2] ? 1 : 0;
+                bases = [true, bases[0], bases[1]];
+            } else if (randomOutcome === "Strike!" || randomOutcome === "Out!") {
+                score = Math.max(0, score - 1);
+            }
+
+            document.getElementById('score').textContent = score;
+            updateBasesDisplay();
+        }
+
+        updateBasesDisplay();
+    </script>
+</body>
+</html>
